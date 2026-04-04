@@ -32,6 +32,19 @@
 ### 개발인원
 - 2명
 
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/ChanSolShin" width="100"/><br/>
+      <b>ChanSolShin</b>
+    </td>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/HunCY5" width="100"/><br/>
+      <b>HunCY5</b>
+    </td>
+  </tr>
+</table>
+
 ---
 
 ### 앱스토어 링크
