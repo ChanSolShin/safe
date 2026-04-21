@@ -84,7 +84,8 @@ https://apps.apple.com/us/app/%EC%84%B8%EC%9E%8E/id6759786625?l=ko
 - observe 패턴을 이용하여 다른부분의 동작을 감지하는 로직 작성
 
 ---
-<img width="250" height="2556" alt="image" src="https://github.com/user-attachments/assets/ad376428-1880-495b-b740-2bad2c20a6c8" />
-<img width="250" height="2556" alt="image" src="https://github.com/user-attachments/assets/7d336d63-7665-4793-ad62-979d4377aa61" />
-<img width="250" height="2556" alt="image" src="https://github.com/user-attachments/assets/ea606746-6a00-45ad-bb3e-8b55c8bb5c70" />
-
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ad376428-1880-495b-b740-2bad2c20a6c8" width="180"/>
+  <img src="https://github.com/user-attachments/assets/7d336d63-7665-4793-ad62-979d4377aa61" width="180"/>
+  <img src="https://github.com/user-attachments/assets/ea606746-6a00-45ad-bb3e-8b55c8bb5c70" width="180"/>
+</p>
