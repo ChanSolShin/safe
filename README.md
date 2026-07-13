@@ -72,9 +72,111 @@ https://apps.apple.com/us/app/%EC%84%B8%EC%9E%8E/id6759786625?l=ko
 - **Version Control:** Git & GitHub
 - **Collaboration**: Notion
 - **CNN Model: YOLOv11, MoveNet**
-
 ---
+## 아키텍처
 
+safe는 UIKit 기반의 MVC 구조로 구성되어 있습니다.
+
+화면 단위 기능은 `ViewController` 하위에 분리되어 있으며, 각 화면의 UI는 `View` 계층에서 관리합니다.  
+사용자 인증, 근로자 관리, 위험 로그 조회는 Firebase Auth와 Firestore를 사용하며, 실시간 위험 감지는 `Camera`, `ML`, `PPEDetection` 영역에서 처리합니다.
+
+```text
+safe/
+├── App
+│   ├── AppDelegate.swift                # Firebase 초기화 및 앱 생명주기 관리
+│   ├── SceneDelegate.swift              # Window 생성, 초기 화면 및 로그인 상태 라우팅
+│   └── MainTabBarController.swift       # 안전감시/위험로그/근로자/프로필 탭 구성
+│
+├── ViewController
+│   ├── Login
+│   │   ├── ChoiceLoginViewController.swift       # 근로자/관리자 로그인 선택
+│   │   ├── CrewLoginViewController.swift         # 근로자 로그인 처리
+│   │   └── ManagerLoginViewController.swift      # 관리자 로그인 처리
+│   │
+│   ├── SignUp
+│   │   ├── CrewSignUpViewController.swift        # 근로자 회원가입 처리
+│   │   └── ManagerSignUpViewController.swift     # 관리자 회원가입 처리
+│   │
+│   ├── SafetyManager
+│   │   └── SafetyManagerViewController.swift     # 안전 감시 메인 화면 및 위험 감지 진입
+│   │
+│   ├── RiskDetectionViewController.swift         # 카메라 기반 자세/PPE 위험 감지
+│   ├── RiskLogViewController.swift               # 위험 로그 조회 및 상세 확인
+│   ├── CrewManageViewController.swift            # 근로자 초대 및 관리
+│   └── ProfileViewController.swift               # 프로필, 로그인/회원가입, 출퇴근 상태 관리
+│
+├── View
+│   ├── Login
+│   │   ├── ChoiceLoginView.swift                 # 로그인 선택 UI
+│   │   ├── CrewLoginView.swift                   # 근로자 로그인 UI
+│   │   └── ManagerLoginView.swift                # 관리자 로그인 UI
+│   │
+│   ├── SignUp
+│   │   ├── CrewSignUpView.swift                  # 근로자 회원가입 UI
+│   │   └── ManagerSignUpView.swift               # 관리자 회원가입 UI
+│   │
+│   ├── CrewManageView.swift                      # 근로자 관리 화면 UI
+│   ├── CrewRowView.swift                         # 근로자 목록 셀 UI
+│   ├── CurrentCrewView.swift                     # 현재 근로자 정보 UI
+│   ├── RegisterCrewView.swift                    # 근로자 등록/초대 UI
+│   ├── CrewMessageView.swift                     # 근로자 메시지 UI
+│   ├── ProfileView.swift                         # 프로필 화면 UI
+│   ├── RiskLogView.swift                         # 위험 로그 목록 UI
+│   ├── RiskLogCardView.swift                     # 위험 로그 카드 UI
+│   └── PPEDetectionOverlayView.swift             # PPE 감지 결과 오버레이 UI
+│
+├── Model
+│   ├── CrewLoginModel.swift                      # 근로자 로그인 데이터 모델
+│   ├── CrewSignUpModel.swift                     # 근로자 회원가입 데이터 모델
+│   ├── ManagerLoginModel.swift                   # 관리자 로그인 데이터 모델
+│   ├── ManagerSignUpModel.swift                  # 관리자 회원가입 데이터 모델
+│   │
+│   └── PPEDetection
+│       ├── PPEDetectionModel.swift               # PPE 감지 결과 모델
+│       ├── PPEDetector.swift                     # YOLO/CoreML 기반 PPE 감지 처리
+│       └── PPERiskLogger.swift                   # PPE 위험 로그 저장
+│
+├── Camera
+│   └── CameraFeedManager.swift                   # 카메라 프레임 수집 및 감지 화면 전달
+│
+├── ML
+│   ├── Extensions
+│   │   ├── CVPixelBuffer+TFLite.swift            # TensorFlow Lite 픽셀 버퍼 변환 확장
+│   │   ├── CGSize+TFLite.swift                   # TensorFlow Lite 크기 변환 확장
+│   │   └── Data+TFLite.swift                     # TensorFlow Lite 데이터 변환 확장
+│   │
+│   └── Models
+│       ├── PoseEstimator.swift                   # 자세 추정 공통 인터페이스
+│       ├── PoseNet.swift                         # PoseNet 기반 자세 추정
+│       ├── MoveNet.swift                         # MoveNet 기반 자세 추정
+│       ├── PoseConfig.swift                      # 자세 추정 설정값
+│       ├── PoseData.swift                        # 자세 추정 결과 데이터
+│       ├── PoseAngle.swift                       # 관절 각도 계산
+│       ├── JointAngles.swift                     # 주요 관절 각도 모델
+│       ├── TwistAndBending.swift                 # 비틀림/굽힘 자세 판단
+│       ├── PostureEvaluatorBuffer.swift          # 자세 평가 버퍼
+│       ├── PostureRiskLogger.swift               # 자세 위험 로그 저장
+│       │
+│       └── ErgonomicAssessment
+│           ├── OWAS.swift                        # OWAS 작업 자세 평가
+│           ├── REBA.swift                        # REBA 작업 자세 평가
+│           └── RULA.swift                        # RULA 작업 자세 평가
+│
+├── Resources
+│   ├── Assets.xcassets                           # 앱 아이콘, 로고, 카메라/PPE/경고 이미지
+│   ├── GoogleService-Info.plist                  # Firebase 설정 파일
+│   └── DetectionYolov11.mlpackage                # PPE 감지용 CoreML 모델
+│
+├── Tests
+│   └── SafeTests.swift                           # Unit Test 코드
+│
+└── Project
+    ├── Project.swift                             # Tuist 프로젝트 설정
+    ├── Tuist.swift                               # Tuist 설정
+    ├── Podfile                                  # CocoaPods 의존성 설정
+    └── README.md                               # 프로젝트 설명 문서
+```
+---
 ## 배운점 및 성과
 
 - 오픈소스 적용 및 올바른 라이선스 범위 학습
